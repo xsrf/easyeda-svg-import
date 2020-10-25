@@ -7,6 +7,7 @@ var svgImportOffsetX = 0;
 var svgImportOffsetY = 0;
 var svgDocument = '';
 var svgPaths = [];
+var svgImportLayer = 1;
 
 
 function newId() {
@@ -25,6 +26,17 @@ function getOffsets() {
 }
 
 
+function updateLayerOptions() {
+    let el = document.querySelector('#import-layer');
+    let oldValue = el.value;
+    let s = api('getSource', {type: "json"});
+    while(e=el.firstChild) el.removeChild(e); // remove all options
+    let layers = Object.keys(s.layers).map( k => { let l = s.layers[k]; l.key=k; return l; } ).filter( l => l.visible);
+    layers.forEach( layer => {
+        el.insertAdjacentHTML("beforeend",`<option value="${layer.key}">${layer.key} - ${layer.name}</option>`);
+    });
+}
+
 function offsetsChange() {
     console.log('offsetsChange');
     svgImportOffsetX = Number(document.querySelector('#import-origin-x').value);
@@ -42,7 +54,7 @@ function addSolidRegion(code) {
     let iid = newId();
     let s = api('getSource', {type: "json"});
     if(s.SOLIDREGION=== undefined) s.SOLIDREGION = {};
-    s.SOLIDREGION["iid"] = { gId: iid, layerid: "1", pathStr: code, type: "solid"};
+    s.SOLIDREGION["iid"] = { gId: iid, layerid: `${svgImportLayer}`, pathStr: code, type: "solid"};
     api('applySource', {source: s, createNew: !true});
 }
    
@@ -53,13 +65,13 @@ function addSVGNode(code) {
     if(s.SVGNODE === undefined) s.SVGNODE = {};
     s.SVGNODE[iid] = { 
      gId: iid, 
-     layerid: "1", 
+     layerid: `${svgImportLayer}`, 
      nodeName: "path",
      nodeType: 1,
      attrs: {
       d: code,
       id: iid, 
-      layerid: "1",
+      layerid: `${svgImportLayer}`,
       stroke: "none"
      }
     };
@@ -93,6 +105,7 @@ function reparseSVGPath(pathData) {
     var cx = 0;
     var zx = 0;
     var zy = 0;
+    var k1x = k1y = k2x = k2y = 0;
     var sx = svgImportScale;
     var sy = svgImportScale;
     var ox = svgImportOffsetX;
@@ -203,6 +216,14 @@ function initForm() {
                             <a class="l-btn" id="btn-get-offsets"><span class="l-btn-left"><span class="l-btn-text">Editor Origin</span></span></a>
                         </div>
                     </fieldset>
+                    <fieldset>
+                        <legend>Import Layer</legend>
+                        <div>
+                            <select name="import-layer" id="import-layer">
+                                <option value="0">none</option>
+                            </select>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
             <div class="dialog-button">
@@ -244,6 +265,11 @@ function initForm() {
         svgImportScale = Number(e.target.value);
         console.log(svgImportScale);
     });
+
+    document.querySelector('#import-layer').addEventListener('change',(e)=>{ 
+        console.log(e);
+        svgImportLayer = Number(e.target.value);
+    });
     
     document.querySelector('#btn-scale-in').addEventListener('click',(e)=> {
         svgImportScale = 10;
@@ -259,6 +285,7 @@ function initForm() {
     });
     
     getOffsets();
+    updateLayerOptions();
 }
 
 initForm();
