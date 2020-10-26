@@ -8,6 +8,7 @@ var svgImportOffsetY = 0;
 var svgDocument = '';
 var svgPaths = [];
 var svgImportLayer = 1;
+var unknownCommandFlag = false;
 
 
 function newId() {
@@ -80,10 +81,12 @@ function addSVGNode(code) {
 
 
 function loadSVGData() {
+    unknownCommandFlag = false;
     const regexp = /<path[^>]*[^a-z]d="([^"]+)"/g;
     var paths = [...svgDocument.matchAll(regexp)].map((e) => reparseSVGPath(e[1]));
     console.log(paths);
     svgPaths = paths;
+    if(unknownCommandFlag) alert('Unknown commands found in SVG. Import may be corrupt. Sorry 😕');
 }
 
 function importSVGClick() {
@@ -111,113 +114,118 @@ function reparseSVGPath(pathData) {
     var ox = svgImportOffsetX;
     var oy = svgImportOffsetY;
     var o = Array();
+    var lastCmd = 'M';
 
     console.log(`Importing scale ${svgImportScale}, Offset (${svgImportOffsetX},${svgImportOffsetY})`);
 
     // Parsing the SVG. Converting all relative commands to absolute and stripping commands not supported!
     while(idx < c.length) {
-        if(c[idx] == 'M') {
-            cx = zx = Number(c[idx+1]);
-            cy = zy = Number(c[idx+2]);
-            idx += 2;
-            o = [...o, 'M', cx*sx+ox, cy*sy+oy];
-        }
-        if(c[idx] == 'm') {
-            cx = zx += Number(c[idx+1]);
-            cy = zy += Number(c[idx+2]);
-            idx += 2;
-            o = [...o, 'M', cx*sx+ox, cy*sy+oy];
-        }
-        if(c[idx] == 'z' || c[idx] == 'Z') {
-            o = [...o, 'L', zx*sx+ox, zy*sy+oy];
-        }
-        if(c[idx] == 'L') {
-            cx = Number(c[idx+1]);
-            cy = Number(c[idx+2]);
-            idx += 2;
-            o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
-        }
-        if(c[idx] == 'l') {
-            cx += Number(c[idx+1]);
-            cy += Number(c[idx+2]);
-            idx += 2;
-            o = [...o, 'L', cx*sx+ox, cy*sy+oy];
-        }
-        if(c[idx] == 'H') {
-            cx = Number(c[idx+1]);
-            idx += 1;
-            o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
-        }
-        if(c[idx] == 'h') {
-            cx += Number(c[idx+1]);
-            idx += 1;
-            o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
-        }
-        if(c[idx] == 'V') {
-            cy = Number(c[idx+1]);
-            idx += 1;
-            o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
-        }
-        if(c[idx] == 'v') {
-            cy += Number(c[idx+1]);
-            idx += 1;
-            o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
-        }
-        if(c[idx] == 'Q') {
-            k1x = Number(c[++idx]);
-            k1y = Number(c[++idx]);
-            cx = Number(c[++idx]);
-            cy = Number(c[++idx]);
-            o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
-        }
-        if(c[idx] == 'q') {
-            k1x = cx + Number(c[++idx]);
-            k1y = cy + Number(c[++idx]);
-            cx += Number(c[++idx]);
-            cy += Number(c[++idx]);
-            o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
-        }
-        if(c[idx] == 'C') {
-            k1x = Number(c[++idx]);
-            k1y = Number(c[++idx]);
-            k2x = Number(c[++idx]);
-            k2y = Number(c[++idx]);
-            cx = Number(c[++idx]);
-            cy = Number(c[++idx]);
-            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
-            // calculate next k1x/k1y for following S
-            k1x = cx + (cx-k2x);
-            k1y = cy + (cy-k2y);
-        }
-        if(c[idx] == 'c') {
-            k1x = cx + Number(c[++idx]);
-            k1y = cy + Number(c[++idx]);
-            k2x = cx + Number(c[++idx]);
-            k2y = cy + Number(c[++idx]);
-            cx += Number(c[++idx]);
-            cy += Number(c[++idx]);
-            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
-            // calculate next k1x/k1y for following S
-            k1x = cx + (cx-k2x);
-            k1y = cy + (cy-k2y);
-        }
-        if(c[idx] == 'S') {
-            k2x = Number(c[++idx]);
-            k2y = Number(c[++idx]);
-            cx = Number(c[++idx]);
-            cy = Number(c[++idx]);
-            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
-        }
-        if(c[idx] == 's') {
-            k2x = cx + Number(c[++idx]);
-            k2y = cy + Number(c[++idx]);
-            cx += Number(c[++idx]);
-            cy += Number(c[++idx]);
-            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+        // Parse the current command
+        switch(c[idx]) {
+            case 'M':
+                cx = zx = Number(c[++idx]);
+                cy = zy = Number(c[++idx]);
+                o = [...o, 'M', cx*sx+ox, cy*sy+oy];
+                break;
+            case 'm':
+                cx = zx += Number(c[++idx]);
+                cy = zy += Number(c[++idx]);
+                o = [...o, 'M', cx*sx+ox, cy*sy+oy];
+                break;
+            case 'Z':
+            case 'z':
+                o = [...o, 'L', zx*sx+ox, zy*sy+oy];
+                break;
+            case 'L':
+                cx = Number(c[++idx]);
+                cy = Number(c[++idx]);
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
+                break;
+            case 'l':
+                cx += Number(c[++idx]);
+                cy += Number(c[++idx]);
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];
+                break;
+            case 'H':
+                cx = Number(c[++idx]);
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];
+                break;
+            case 'h':
+                cx += Number(c[++idx]);
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
+                break;
+            case 'V':
+                cy = Number(c[++idx]);
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
+                break;
+            case 'v':
+                cy += Number(c[++idx]);
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
+                break;
+            case 'Q':
+                k1x = Number(c[++idx]);
+                k1y = Number(c[++idx]);
+                cx = Number(c[++idx]);
+                cy = Number(c[++idx]);
+                o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
+            case 'q':
+                k1x = cx + Number(c[++idx]);
+                k1y = cy + Number(c[++idx]);
+                cx += Number(c[++idx]);
+                cy += Number(c[++idx]);
+                o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
+            case 'C':
+                k1x = Number(c[++idx]);
+                k1y = Number(c[++idx]);
+                k2x = Number(c[++idx]);
+                k2y = Number(c[++idx]);
+                cx = Number(c[++idx]);
+                cy = Number(c[++idx]);
+                o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+                // calculate next k1x/k1y for following S
+                k1x = cx + (cx-k2x);
+                k1y = cy + (cy-k2y);  
+                break;
+            case 'c':
+                k1x = cx + Number(c[++idx]);
+                k1y = cy + Number(c[++idx]);
+                k2x = cx + Number(c[++idx]);
+                k2y = cy + Number(c[++idx]);
+                cx += Number(c[++idx]);
+                cy += Number(c[++idx]);
+                o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+                // calculate next k1x/k1y for following S
+                k1x = cx + (cx-k2x);
+                k1y = cy + (cy-k2y);
+                break;
+            case 'S':
+                k2x = Number(c[++idx]);
+                k2y = Number(c[++idx]);
+                cx = Number(c[++idx]);
+                cy = Number(c[++idx]);
+                o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
+            case 's':
+                k2x = cx + Number(c[++idx]);
+                k2y = cy + Number(c[++idx]);
+                cx += Number(c[++idx]);
+                cy += Number(c[++idx]);
+                o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
+            default:
+                if( Number(c[idx]) == NaN) {
+                    // Flag unknown command
+                    console.log(`Unexpected SVG command: ${c[idx]}`);
+                } else {
+                    console.error(`Unexpected SVG command: ${c[idx]}`);
+                }
+                unknownCommandFlag = true;
+                break;
         }
         idx++;
     }
-
     return o.join(' ');
 }
 
