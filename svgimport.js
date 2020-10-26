@@ -163,6 +163,58 @@ function reparseSVGPath(pathData) {
             idx += 1;
             o = [...o, 'L', cx*sx+ox, cy*sy+oy];            
         }
+        if(c[idx] == 'Q') {
+            k1x = Number(c[++idx]);
+            k1y = Number(c[++idx]);
+            cx = Number(c[++idx]);
+            cy = Number(c[++idx]);
+            o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
+        }
+        if(c[idx] == 'q') {
+            k1x = cx + Number(c[++idx]);
+            k1y = cy + Number(c[++idx]);
+            cx += Number(c[++idx]);
+            cy += Number(c[++idx]);
+            o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
+        }
+        if(c[idx] == 'C') {
+            k1x = Number(c[++idx]);
+            k1y = Number(c[++idx]);
+            k2x = Number(c[++idx]);
+            k2y = Number(c[++idx]);
+            cx = Number(c[++idx]);
+            cy = Number(c[++idx]);
+            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+            // calculate next k1x/k1y for following S
+            k1x = cx + (cx-k2x);
+            k1y = cy + (cy-k2y);
+        }
+        if(c[idx] == 'c') {
+            k1x = cx + Number(c[++idx]);
+            k1y = cy + Number(c[++idx]);
+            k2x = cx + Number(c[++idx]);
+            k2y = cy + Number(c[++idx]);
+            cx += Number(c[++idx]);
+            cy += Number(c[++idx]);
+            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+            // calculate next k1x/k1y for following S
+            k1x = cx + (cx-k2x);
+            k1y = cy + (cy-k2y);
+        }
+        if(c[idx] == 'S') {
+            k2x = Number(c[++idx]);
+            k2y = Number(c[++idx]);
+            cx = Number(c[++idx]);
+            cy = Number(c[++idx]);
+            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+        }
+        if(c[idx] == 's') {
+            k2x = cx + Number(c[++idx]);
+            k2y = cy + Number(c[++idx]);
+            cx += Number(c[++idx]);
+            cy += Number(c[++idx]);
+            o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+        }
         idx++;
     }
 
