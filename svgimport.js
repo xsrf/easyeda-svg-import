@@ -176,6 +176,20 @@ function reparseSVGPath(pathData) {
                 cy += Number(c[++idx]);
                 o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
                 break;
+            case 'T':
+                k1x = cx + (cx-k1x);
+                k1y = cy + (cy-k1y);
+                cx = Number(c[++idx]);
+                cy = Number(c[++idx]);
+                o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
+            case 't':
+                k1x = cx + (cx-k1x);
+                k1y = cy + (cy-k1y);
+                cx += Number(c[++idx]);
+                cy += Number(c[++idx]);
+                o = [...o, 'Q', k1x*sx+ox, k1y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
             case 'C':
                 k1x = Number(c[++idx]);
                 k1y = Number(c[++idx]);
@@ -184,9 +198,6 @@ function reparseSVGPath(pathData) {
                 cx = Number(c[++idx]);
                 cy = Number(c[++idx]);
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
-                // calculate next k1x/k1y for following S
-                k1x = cx + (cx-k2x);
-                k1y = cy + (cy-k2y);  
                 break;
             case 'c':
                 k1x = cx + Number(c[++idx]);
@@ -196,11 +207,10 @@ function reparseSVGPath(pathData) {
                 cx += Number(c[++idx]);
                 cy += Number(c[++idx]);
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
-                // calculate next k1x/k1y for following S
-                k1x = cx + (cx-k2x);
-                k1y = cy + (cy-k2y);
                 break;
             case 'S':
+                k1x = cx + (cx-k2x);
+                k1y = cy + (cy-k2y);  
                 k2x = Number(c[++idx]);
                 k2y = Number(c[++idx]);
                 cx = Number(c[++idx]);
@@ -208,6 +218,8 @@ function reparseSVGPath(pathData) {
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
                 break;
             case 's':
+                k1x = cx + (cx-k2x);
+                k1y = cy + (cy-k2y);
                 k2x = cx + Number(c[++idx]);
                 k2y = cy + Number(c[++idx]);
                 cx += Number(c[++idx]);
