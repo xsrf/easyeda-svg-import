@@ -128,7 +128,14 @@ function reparseSVGPath(pathData) {
     // Parsing the SVG. Converting all relative commands to absolute and stripping commands not supported!
     while(idx < c.length) {
         // Parse the current command
-        switch(c[idx]) {
+        if(isNaN(Number(c[idx]))) {
+            // save the current/last command for repetitions
+            lastCmd = c[idx];
+        } else {
+            // additional coordinates are parsed using the last known command
+            idx--;
+        }
+        switch(lastCmd) {
             case 'M':
                 cx = zx = Number(c[++idx]);
                 cy = zy = Number(c[++idx]);
@@ -234,12 +241,8 @@ function reparseSVGPath(pathData) {
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
                 break;
             default:
-                if( Number(c[idx]) == NaN) {
-                    // Flag unknown command
-                    console.log(`Unexpected SVG command: ${c[idx]}`);
-                } else {
-                    console.error(`Unexpected SVG command: ${c[idx]}`);
-                }
+                // Flag unknown command
+                console.log(`Unexpected SVG Command "${lastCmd}" at idx ${idx} sequence "... ${c[idx]} > ${c[idx]} < ${c[idx]} ..."`);
                 unknownCommandFlag = true;
                 break;
         }
