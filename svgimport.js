@@ -99,12 +99,12 @@ function importSVGClick() {
 }
 
 function reparseSVGPath(pathData) {
-    // Add spaces around chars ( M5,5L8,8 -> M 5,5 L 8,8 )
-    const regex_chars = /([a-zA-Z])/g;
+    // Add spaces around chars ( M5,5L8,8 -> M 5,5 L 8,8 ) except e which is used as 42e-3
+    const regex_chars = /([a-df-zA-DF-Z])/g;
     pathData = pathData.replaceAll(regex_chars,' $1 ');
     // Add spaces before minus ( M5-5 -> M5 -5 )
-    const regex_minus = /([-])/g;
-    pathData = pathData.replaceAll(regex_minus,' $1');
+    const regex_minus = /([^eE])(-)/g;
+    pathData = pathData.replaceAll(regex_minus,'$1 $2');
     // Normalize spaces / remove comma ( M5-5L8,8 -> M 5 -5 L 8 8 )
     const regex_svg = /[^0-9a-zA-Z-\.]+/g;
     pathData = pathData.replaceAll(regex_svg,' ').trim();
@@ -362,7 +362,7 @@ function initForm() {
         document.querySelector('#import-scale').value = svgImportScale;
     });
     document.querySelector('#btn-scale-mm').addEventListener('click',(e)=> {
-        svgImportScale = 3.937; // 10/2.54
+        svgImportScale = 3.937; // 10/2.54 = 3.937
         document.querySelector('#import-scale').value = svgImportScale;
     });
     
