@@ -1,0 +1,21 @@
+﻿[en]
+SVG Import = SVG Import
+Import SVG ... = Import SVG ...
+err_file_not_supported = File not supported, .svg files only
+err_no_paths_found = No path-Tags found 😕
+err_parsing_all_paths = Failed to parse paths, see console log for details 😕
+warn_parsing_some_paths = Not all paths were parsed correctly, see console log for details
+
+[de]
+SVG Import = SVG Importer
+Import SVG ... = Importiere SVG ...
+Directly import SVG paths = SVG Pfade direkt importieren
+Load file... = Datei laden...
+Load file = Datei laden
+Editor Origin = Editor Ursprung
+Import as = Importieren als
+Import file = Datei importieren
+err_file_not_supported = Dateityp nicht unterstützt, bitte .svg wählen
+err_no_paths_found = Keine path-Tags gefunden 😕
+err_parsing_all_paths = Fehler beim parsen der path-Tags, siehe Konsole für Details 😕
+warn_parsing_some_paths = Nicht alle path-Tags wurden korrekt gelesen, siehe Konsole für Details
