@@ -406,7 +406,7 @@ function reparseSVGPath(pathData) {
     var cx = 0;
     var zx = 0;
     var zy = 0;
-    var k1x = k1y = k2x = k2y = 0;
+    var k1x = k1y = k2x = k2y = rx = ry = rt = f1 = f2 = 0;
     var sx = svgImportScale;
     var sy = svgImportScale;
     var ox = svgImportOffsetX;
@@ -530,6 +530,26 @@ function reparseSVGPath(pathData) {
                 cx += Number(c[++idx]);
                 cy += Number(c[++idx]);
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
+                break;
+            case 'A':
+                rx = Number(c[++idx]);
+                ry = Number(c[++idx]);
+                rt = Number(c[++idx]);
+                f1 = Number(c[++idx]);
+                f2 = Number(c[++idx]);
+                cx = Number(c[++idx]);
+                cy = Number(c[++idx]);
+                o = [...o, 'A', rx*sx, ry*sy, rt, f1, f2, cx*sx+ox, cy*sy+oy];
+                break;
+            case 'a':
+                rx = Number(c[++idx]);
+                ry = Number(c[++idx]);
+                rt = Number(c[++idx]);
+                f1 = Number(c[++idx]);
+                f2 = Number(c[++idx]);
+                cx += Number(c[++idx]);
+                cy += Number(c[++idx]);
+                o = [...o, 'A', rx*sx, ry*sy, rt, f1, f2, cx*sx+ox, cy*sy+oy];
                 break;
             default:
                 // Flag unknown command
