@@ -41,6 +41,7 @@ var dlg = api('createDialog', {
         <legend class="i18n">Import as</legend>
         <div><input type="radio" name="import-as" id="import-as-svg" value="svg" checked="checked"><label for="import-as-svg" class="i18n">SVG Node (copper, soldermask, silk, document)</label></div>
         <div><input type="radio" name="import-as" id="import-as-solid" value="solid"><label for="import-as-solid" class="i18n">Solid region (copper fill / keepout, board cutout)</label></div>
+        <div><input type="radio" name="import-as" id="import-as-track" value="track"><label for="import-as-track" class="i18n">Track (board outline, silk)</label> <i class="i18n" style="color:#A00">(only line segments supported)</i></div>
     </fieldset>
     <fieldset>
         <legend class="i18n">Import scale (EasyEDA base unit is 0.1 inch)</legend>
@@ -230,6 +231,12 @@ $('#import-as-solid').on('change',(e)=>{
     }
 });
 
+$('#import-as-track').on('change',(e)=>{
+    if(e.target.value) {
+        setSvgImportAs(e.target.value);
+    }
+});
+
 $('#extension-svgimport-fileinput').on('change',(e)=>{
     var file = document.querySelector('#extension-svgimport-fileinput').files[0];    
     if (file.name.match(/\.(svg)$/)) {
@@ -296,6 +303,11 @@ function uiUpdateLayerOptions() {
     layers.forEach( layer => {
         el.insertAdjacentHTML("beforeend",`<option value="${layer.key}">${layer.key} - ${layer.name}</option>`);
     });
+    uiDisplayImportLayer();
+}
+
+function uiDisplayImportLayer() {
+    $('#import-layer').val(svgImportLayer);
 }
 
 function debugLog(msg) {
@@ -329,14 +341,25 @@ function doImport() {
         // solid regions only support split paths
         svgPaths = splitPaths(svgPaths);        
         addSolidRegion(svgPaths);
-        //svgPaths.forEach(e => addSolidRegion(e));
     }
 
     if(svgImportAs == 'svg') {
         addSVGNode(svgPaths);
-        //svgPaths.forEach(e => addSVGNode(e));
     }
 
+    if(svgImportAs == 'track') {
+        svgPaths = splitPaths(svgPaths);
+        var cntBeforePts = svgPaths.length;
+        svgPaths = pathsToPoints(svgPaths);
+        if(svgPaths.length == 0) {
+            $.messager.error('err_no_track_points');
+            return;
+        }
+        if(svgPaths.length < cntBeforePts) {
+            $.messager.warn('warn_some_track_points');
+        }
+        addTrack(svgPaths);
+    }
     
 
 }
@@ -349,6 +372,18 @@ function joinPaths(paths) {
     return paths.join(' ');
 }
 
+function pathsToPoints(paths) {
+    paths = splitPaths(paths).filter(p => !p.match(/[CSQTA]/));
+    paths = paths.map(p => {
+        p = p.replaceAll(/[MZL]/g,'').replaceAll(/[ ]+/g,' ').trim().split(' ');
+        pts = Array();
+        for(var i=0; i<Math.floor(p.length/2); i++) {
+            pts[i] = {x: p[i*2], y: p[i*2+1]}
+        }
+        return pts;
+    })
+    return paths;
+}
 
 function newId() {
     return "cgge"+Math.floor(Math.random() * 9e6);
@@ -383,6 +418,22 @@ function addSVGNode(code) {
                 layerid: `${svgImportLayer}`,
                 stroke: "none"
             }
+        };
+    });
+    api('applySource', {source: s, createNew: false});
+}
+
+function addTrack(points) {
+    if(typeof(points) == 'string') points = [points];
+    let s = api('getSource', {type: "json"});
+    if(s.TRACK === undefined) s.TRACK = {};
+    points.forEach(e => {
+        let iid = newId();
+        s.TRACK[iid] = { 
+            gId: iid, 
+            layerid: `${svgImportLayer}`, 
+            strokeWidth: 1,
+            pointArr: e
         };
     });
     api('applySource', {source: s, createNew: false});

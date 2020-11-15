@@ -44,5 +44,3 @@ Usage
 Issues
 ------
 To be fair, I wrote this for a single usecase: Importing procedurally generated SVGs from [OpenSCAD](https://www.openscad.org/) into EasyEDA. And it works fine.
-
-So far, you cannot import as *Board Outline*. Selecting *Board Outline* as Layer just won't work properly.

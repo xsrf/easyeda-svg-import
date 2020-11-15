@@ -5,6 +5,8 @@ err_file_not_supported = File not supported, .svg files only
 err_no_paths_found = No path-Tags found 😕
 err_parsing_all_paths = Failed to parse paths, see console log for details 😕
 warn_parsing_some_paths = Not all paths were parsed correctly, see console log for details
+err_no_track_points = No valid paths found that only consist of line segments
+warn_some_track_points = Some paths were not imported as tracks, because they contained not only line segments
 
 [de]
 SVG Import = SVG Importer
@@ -19,3 +21,5 @@ err_file_not_supported = Dateityp nicht unterstützt, bitte .svg wählen
 err_no_paths_found = Keine path-Tags gefunden 😕
 err_parsing_all_paths = Fehler beim parsen der path-Tags, siehe Konsole für Details 😕
 warn_parsing_some_paths = Nicht alle path-Tags wurden korrekt gelesen, siehe Konsole für Details
+err_no_track_points = Keine reinen Linien-Pfade vorhanden
+warn_some_track_points = Einige Pfade wurde nicht importiert, weil sie nicht nur aus Linien-Segmenten bestehen
