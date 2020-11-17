@@ -3,7 +3,7 @@
 	"description": "Directly import SVG paths",
 	"version": "1.0",
 	"homepage": "https://github.com/xsrf/easyeda-svg-import",
-    "author": "Andreas Bernhofer",
+	"author": "Andreas Bernhofer",
 	"icons": {
 		"default": "ext-icon.svg"
 	},

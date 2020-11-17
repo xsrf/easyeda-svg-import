@@ -8,38 +8,14 @@ Installation
 ------------
 Clone or Download this repository. Then in [EasyEDA](https://easyeda.com/editor) go to "Advanced" -> "Extensions" -> "Extensions Setting" -> "Load Extension..." -> "Select Files..." and select all files from the `extension` directory of this repository.
 
-<img src="images/step1.png" alt="Extension Setting...">
-
-*Extension Setting...*
-
-<img src="images/step2.png" alt="Load Extension, Select Files...">
-
-*Load Extension, Select Files...*
-
-<img src="images/step3.png" alt="Select all files from extension">
-
-*Select all files from "extension"*
-
-<img src="images/step4.png" alt="Load Extension">
-
-*Load Extension*
-
-<img src="images/step5.png" alt="Extension List">
-
-*Extension should show up in extension list, click Cancel*
-
-**Be warned! This may corrupt your Project! Have a backup!** 
+<img src="images/EasyEDA-SVG-Install.gif" alt="Extension Installation" />
 
 Usage
 -----
 
-<img src="images/step6.png" alt="Extension List">
+**Be warned! This may corrupt your Project! Have a backup!** 
 
-*SVG Import* Menu
-
-<img src="images/dialog.png" alt="Extension List">
-
-*Main Import Dialog*
+<img src="images/EasyEDA-SVG-Demo.gif" alt="Demo" />
 
 Issues
 ------
