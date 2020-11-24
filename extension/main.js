@@ -174,9 +174,9 @@ api('createToolbarButton', {
 	fordoctype:'pcb',
 	menu:[
 		{
-			text:"Show Dialog", 
+			text:"Open Import Dialog", 
 			cmd:"extension-svgimport-open", 
-			title:'Show Dialog',
+			title:'Open Import Dialog',
 			icon: api('getRes', {file:'icon.svg'})
         },
         {

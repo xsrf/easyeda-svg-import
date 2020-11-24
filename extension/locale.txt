@@ -14,6 +14,7 @@ Import SVG ... = Importiere SVG ...
 Directly import SVG paths = SVG Pfade direkt importieren
 Load file... = Datei laden...
 Load file = Datei laden
+Open Import Dialog = Import-Fenster anzeigen
 Editor Origin = Editor Ursprung
 Import as = Importieren als
 Import file = Datei importieren
