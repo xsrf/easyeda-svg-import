@@ -13,8 +13,6 @@ Clone or Download this repository. Then in [EasyEDA](https://easyeda.com/editor)
 Usage
 -----
 
-**Be warned! This may corrupt your Project! Have a backup!** 
-
 <img src="images/EasyEDA-SVG-Demo.gif" alt="Demo" />
 
 Issues
