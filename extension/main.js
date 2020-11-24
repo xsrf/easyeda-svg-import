@@ -103,12 +103,17 @@ var aboutdlg = api('createDialog', {
     <div style="padding: 8px; text-align: center">
         <h1>SVG Import</h1>
         <p>Icons by <a target="_blank" href="https://www.flaticon.com/de/autoren/smashicons" title="Smashicons">Smashicons</a> from <a target="_blank" href="https://www.flaticon.com/de/" title="Flaticon">www.flaticon.com</a></p>
+        <p>
+            Polyfills<br />
+            ♥ <a target="_blank" rel="noopener" href="https://gomakethings.com/how-to-write-your-own-vanilla-js-polyfill/">https://gomakethings.com/</a> ♥<br />
+            ♥ <a target="_blank" rel="noopener" href="https://cwestblog.com/2013/02/26/javascript-string-prototype-matchall/">https://cwestblog.com/</a> ♥
+        </p>
         <p>Visit <a href="https://github.com/xsrf/easyeda-svg-import" target="_blank">https://github.com/xsrf/easyeda-svg-import</a> for updates</p>
     </div>
 
 `,
 	width : 320,
-	height : 240,
+	height : 300,
 	modal : true,
 	collapsible: false,
 	resizable: false,
@@ -611,4 +616,32 @@ function reparseSVGPath(pathData) {
         idx++;
     }
     return o.join(' ');
+}
+
+
+// ♥ https://cwestblog.com/2013/02/26/javascript-string-prototype-matchall/
+if(!String.prototype.matchAll) {
+    String.prototype.matchAll = function(regexp) {
+    var matches = [];
+    this.replace(regexp, function() {
+      var arr = ([]).slice.call(arguments, 0);
+      var extras = arr.splice(-2);
+      arr.index = extras[0];
+      arr.input = extras[1];
+      matches.push(arr);
+    });
+    return matches.length ? matches : null;
+  };
+}
+
+// ♥ https://gomakethings.com/how-to-write-your-own-vanilla-js-polyfill/
+if (!String.prototype.replaceAll) {
+	String.prototype.replaceAll = function (str, newStr){
+		// If a regex pattern
+		if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+			return this.replace(str, newStr);
+		}
+		// If a string
+		return this.replace(new RegExp(str, 'g'), newStr);
+	};
 }
