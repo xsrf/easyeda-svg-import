@@ -6,9 +6,13 @@ This is me trying to write a script / extension for [EasyEDA](https://easyeda.co
 
 Installation
 ------------
-Clone or Download this repository. Then in [EasyEDA](https://easyeda.com/editor) go to "Advanced" -> "Extensions" -> "Extensions Setting" -> "Load Extension..." -> "Select Files..." and select all files from the `extension` directory of this repository.
+Clone this repository or just download the latest `extension.zip` from [Releases](https://github.com/xsrf/easyeda-svg-import/releases). Then in [EasyEDA](https://easyeda.com/editor) go to "Advanced" -> "Extensions" -> "Extensions Setting" -> "Load Extension..." -> "Select Files..." and select all files from the `extension` directory of this repository.
 
 <img src="images/EasyEDA-SVG-Install.gif" alt="Extension Installation" />
+
+Updates
+-------
+There is no update function for extensions in EasyEDA. Please remove the extension from the "Extensions Setting" and install the new version.
 
 Usage
 -----
