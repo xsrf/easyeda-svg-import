@@ -495,7 +495,9 @@ function reparseSVGPath(pathData) {
                 break;
             case 'Z':
             case 'z':
-                o = [...o, 'L', zx*sx+ox, zy*sy+oy];
+                cx = zx;
+                cy = zy;
+                o = [...o, 'L', cx*sx+ox, cy*sy+oy];
                 break;
             case 'L':
                 cx = Number(c[++idx]);
