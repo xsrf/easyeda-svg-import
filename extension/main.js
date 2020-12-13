@@ -102,6 +102,7 @@ var aboutdlg = api('createDialog', {
     content : `
     <div style="padding: 8px; text-align: center">
         <h1>SVG Import</h1>
+        <h2>Version: ${easyeda.extension.instances.svgimport.manifest.version}</h2>
         <p>Icons by <a target="_blank" href="https://www.flaticon.com/de/autoren/smashicons" title="Smashicons">Smashicons</a> from <a target="_blank" href="https://www.flaticon.com/de/" title="Flaticon">www.flaticon.com</a></p>
         <p>
             Polyfills<br />
@@ -113,7 +114,6 @@ var aboutdlg = api('createDialog', {
 
 `,
 	width : 320,
-	height : 300,
 	modal : true,
 	collapsible: false,
 	resizable: false,
