@@ -481,6 +481,9 @@ function reparseSVGPath(pathData) {
         } else {
             // additional coordinates are parsed using the last known command
             idx--;
+            // If the last used command was M/m this one will be L/l
+            if(lastCmd == 'M') lastCmd = 'L';
+            if(lastCmd == 'm') lastCmd = 'l';
         }
         switch(lastCmd) {
             case 'M':
