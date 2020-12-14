@@ -24,3 +24,22 @@ err_parsing_all_paths = Fehler beim parsen der path-Tags, siehe Konsole für Det
 warn_parsing_some_paths = Nicht alle path-Tags wurden korrekt gelesen, siehe Konsole für Details
 err_no_track_points = Keine reinen Linien-Pfade vorhanden
 warn_some_track_points = Einige Pfade wurde nicht importiert, weil sie nicht nur aus Linien-Segmenten bestehen
+
+[es]
+SVG Import = SVG Importar
+Import SVG ... = Importar SVG ...
+Directly import SVG paths = Importar trayectorias SVG diréctamente
+Load file... = Carga archivo ...
+Load file = Carga archivo
+Open Import Dialog = Abre diálogo de importar
+Editor Origin = Origen del editor
+Import as = Importar como
+Import file = Importar fichero
+About = Acerca de
+Visit GitHub page = Visita la página de GitHub
+err_file_not_supported = Fichero no soportado, solo ficheros .svg
+err_no_paths_found = No se han encontrado etiquetas path 😕
+err_parsing_all_paths = Falló el procesado de trayectorias, mire la consola para más detalles 😕
+warn_parsing_some_paths = No todas las trayectorias se procesaron, mire la consola para más detalles
+err_no_track_points = No se han encontrado trayectorias válidas que sólo consistan en segmentos de línea
+warn_some_track_points = Algunas trayectorias no se importaron como pistas, porque contenían no sólo segmentos de línea
