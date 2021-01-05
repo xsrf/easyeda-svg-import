@@ -5,11 +5,12 @@
 	extension-svgimport-test
 
 */
-
+var paper = easyeda.extension.instances.svgimport.paper;  // reference to "paper" from paper.js
 var svgImportScale = 1;
 var svgImportAs = 'svg';
 var svgImportOffsetX = 0;
 var svgImportOffsetY = 0;
+var svgImportFlattenAccuracy = 0.05;
 var svgDocument = '';
 var svgPaths = [];
 var svgImportLayer = 1;
@@ -41,8 +42,14 @@ var dlg = api('createDialog', {
         <legend class="i18n">Import as</legend>
         <div><input type="radio" name="import-as" id="import-as-svg" value="svg" checked="checked"><label for="import-as-svg" class="i18n">SVG Node (copper, soldermask, silk, document)</label></div>
         <div><input type="radio" name="import-as" id="import-as-solid" value="solid"><label for="import-as-solid" class="i18n">Solid region (copper fill / keepout, board cutout)</label></div>
-        <div><input type="radio" name="import-as" id="import-as-track" value="track"><label for="import-as-track" class="i18n">Track (board outline, silk)</label> <i class="i18n" style="color:#A00">(only line segments supported)</i></div>
+        <div><input type="radio" name="import-as" id="import-as-track" value="track"><label for="import-as-track" class="i18n">Track (board outline, silk)</label> <i class="i18n">(curves will be broken up into segments)</i></div>
     </fieldset>
+    <fieldset id="extension-svgimport-track-options" style="display:none">
+        <legend class="i18n">Curve segmentation accuracy (Track import only)</legend>
+        <div>
+            <input type="number" step="any" name="extension-svgimport-flatten-accuracy" id="extension-svgimport-flatten-accuracy" value="0.05" size="4" style="width:8em"> (in 0.1 inch / 0.25mm)
+        </div>
+    </fieldset>    
     <fieldset>
         <legend class="i18n">Import scale (EasyEDA base unit is 0.1 inch)</legend>
         <div>
@@ -55,8 +62,8 @@ var dlg = api('createDialog', {
     <fieldset>
         <legend class="i18n">Import origin (svg origin will be placed here)</legend>
         <div>
-            <input type="number" step="any" name="import-origin-x" id="import-origin-x" value="0" size="5" style="width:5em">
-            <input type="number" step="any" name="import-origin-y" id="import-origin-y" value="0" size="5" style="width:5em">
+            <input type="number" step="any" name="import-origin-x" id="import-origin-x" value="0" size="5" style="width:6em">
+            <input type="number" step="any" name="import-origin-y" id="import-origin-y" value="0" size="5" style="width:6em">
             <a class="l-btn" id="btn-get-offsets" cmd="extension-svgimport-origin"><span class="l-btn-left"><span class="l-btn-text i18n">Editor Origin</span></span></a>
         </div>
     </fieldset>
@@ -80,8 +87,7 @@ var dlg = api('createDialog', {
         </div>
     </fieldset>
 </div>`,
-	width : 380,
-	height : 400,
+	width : 410,
 	modal : false,
 	collapsible: true,
 	resizable: true,
@@ -109,6 +115,7 @@ var aboutdlg = api('createDialog', {
             ♥ <a target="_blank" rel="noopener" href="https://gomakethings.com/how-to-write-your-own-vanilla-js-polyfill/">https://gomakethings.com/</a> ♥<br />
             ♥ <a target="_blank" rel="noopener" href="https://cwestblog.com/2013/02/26/javascript-string-prototype-matchall/">https://cwestblog.com/</a> ♥
         </p>
+        <p>Paper.js is used for flattening curves on track import</p>
         <p>Visit <a href="https://github.com/xsrf/easyeda-svg-import" target="_blank">https://github.com/xsrf/easyeda-svg-import</a> for updates</p>
     </div>
 
@@ -197,6 +204,21 @@ api('createToolbarButton', {
 	]
 });
 
+function uiDisplayImportFlattenAccuracy() {
+    $('#extension-svgimport-flatten-accuracy').val(svgImportScale);
+}
+
+function setSvgImportFlattenAccuracy(s) {
+    svgImportFlattenAccuracy = s;
+    debugLog('svgImportFlattenAccuracy : '+svgImportFlattenAccuracy);
+}
+
+$('#extension-svgimport-flatten-accuracy').on('change',(e)=>{
+    if(e.target.value) {
+        setSvgImportFlattenAccuracy(e.target.value);
+    }
+});
+
 function uiDisplayImportScale() {
     $('#import-scale').val(svgImportScale);
 }
@@ -227,18 +249,21 @@ $('#import-origin-y').on('change',(e)=>{
 $('#import-as-svg').on('change',(e)=>{
     if(e.target.value) {
         setSvgImportAs(e.target.value);
+        document.querySelector('#extension-svgimport-track-options').style.display = 'none';
     }
 });
 
 $('#import-as-solid').on('change',(e)=>{
     if(e.target.value) {
         setSvgImportAs(e.target.value);
+        document.querySelector('#extension-svgimport-track-options').style.display = 'none';
     }
 });
 
 $('#import-as-track').on('change',(e)=>{
     if(e.target.value) {
         setSvgImportAs(e.target.value);
+        document.querySelector('#extension-svgimport-track-options').style.display = 'block';
     }
 });
 
@@ -378,13 +403,12 @@ function joinPaths(paths) {
 }
 
 function pathsToPoints(paths) {
-    paths = splitPaths(paths).filter(p => !p.match(/[CSQTA]/));
+    paths = splitPaths(paths);
     paths = paths.map(p => {
-        p = p.replaceAll(/[MZL]/g,'').replaceAll(/[ ]+/g,' ').trim().split(' ');
-        pts = Array();
-        for(var i=0; i<Math.floor(p.length/2); i++) {
-            pts[i] = {x: p[i*2], y: p[i*2+1]}
-        }
+        project = new paper.Project();
+        path = project.importSVG(`<path d="${p}"/>`);
+        path.flatten(svgImportFlattenAccuracy);
+        pts = path.segments.map(s=>{return {x: s.point.x, y: s.point.y};});
         return pts;
     })
     return paths;
