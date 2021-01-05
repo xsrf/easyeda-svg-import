@@ -391,7 +391,7 @@ function doImport() {
         addTrack(svgPaths);
     }
     
-
+    api('editorCall','fitview'); // center view, because import messes up view anyways
 }
 
 function splitPaths(paths) {
