@@ -1,6 +1,4 @@
 ﻿[en]
-SVG Import = SVG Import
-Import SVG ... = Import SVG ...
 err_file_not_supported = File not supported, .svg files only
 err_no_paths_found = No path-Tags found 😕
 err_parsing_all_paths = Failed to parse paths, see console log for details 😕
@@ -11,13 +9,20 @@ warn_some_track_points = Some paths were not imported as tracks, because they co
 [de]
 SVG Import = SVG Importer
 Import SVG ... = Importiere SVG ...
-Directly import SVG paths = SVG Pfade direkt importieren
+Import SVG paths into PCB = SVG Pfade auf PCB importieren
 Load file... = Datei laden...
 Load file = Datei laden
 Open Import Dialog = Import-Fenster anzeigen
 Editor Origin = Editor Ursprung
 Import as = Importieren als
 Import file = Datei importieren
+SVG Node (copper, soldermask, silk, document) = SVG Bild (copper, soldermask, silk, document)
+Solid region (copper fill / keepout, board cutout) = Fläche (copper fill / keepout, board cutout)
+Track (board outline, silk) = Linien (Umriss, Beschriftung)
+(curves will be broken up into segments) = (Kurven werden in Segmente geteilt)
+Curve segmentation accuracy (Track import only) = Genauigkeit für Kurven-Segmente (Linien-Import)
+Import scale (EasyEDA base unit is 0.1 inch) = Skalierung (EasyEDA verwendet 0.1 Inch als Basis-Einheit)
+Import origin (svg origin will be placed here) = SVG Ursprung an dieser Stelle plazieren
 err_file_not_supported = Dateityp nicht unterstützt, bitte .svg wählen
 err_no_paths_found = Keine path-Tags gefunden 😕
 err_parsing_all_paths = Fehler beim parsen der path-Tags, siehe Konsole für Details 😕
@@ -28,7 +33,7 @@ warn_some_track_points = Einige Pfade wurde nicht importiert, weil sie nicht nur
 [es]
 SVG Import = SVG Importar
 Import SVG ... = Importar SVG ...
-Directly import SVG paths = Importar trayectorias SVG diréctamente
+Import SVG paths into PCB = Importar trayectorias SVG diréctamente a PCB
 Load file... = Carga archivo ...
 Load file = Carga archivo
 Open Import Dialog = Abre diálogo de importar
