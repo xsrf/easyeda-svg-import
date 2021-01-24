@@ -15,6 +15,7 @@ var svgDocument = '';
 var svgPaths = [];
 var svgImportLayer = 1;
 var unknownCommandFlag = false;
+var svgImportUnitsSet = false;
 
 var dlg = api('createDialog', {
 	title: "SVG Import",
@@ -51,7 +52,7 @@ var dlg = api('createDialog', {
         </div>
     </fieldset>    
     <fieldset>
-        <legend class="i18n">Import scale (EasyEDA base unit is 0.1 inch)</legend>
+        <legend class="i18n">Import scale (EasyEDA base unit is 0.01 inch)</legend>
         <div>
             <input type="number" step="any" name="import-scale" id="import-scale" value="1" size="4" style="width:8em">
             <a class="l-btn" cmd="extension-svgimport-set_mil"><span class="l-btn-left"><span class="l-btn-text">mil</span></span></a>
@@ -131,12 +132,14 @@ api('createCommand', {
 	},
 	'extension-svgimport-open' : () => {
         getOffsets();
-        uiUpdateLayerOptions();
+        initUnits();
+        uiUpdateLayerOptions();        
         dlg.dialog('open');
         dlg.dialog('expand');
     },
 	'extension-svgimport-openfile' : () => {
         getOffsets();
+        initUnits();
         uiUpdateLayerOptions();
         dlg.dialog('open');
         dlg.dialog('expand');
@@ -147,11 +150,11 @@ api('createCommand', {
         uiDisplayImportScale();
     },
     'extension-svgimport-set_inch' : () => {
-        setSvgImportScale(10);
+        setSvgImportScale(100);
         uiDisplayImportScale();
     },
     'extension-svgimport-set_mil' : () => {
-        setSvgImportScale(0.01);
+        setSvgImportScale(0.1);
         uiDisplayImportScale();
     },
     'extension-svgimport-openfiledlg' : () => {
@@ -193,6 +196,15 @@ api('createToolbarButton', {
 		}
 	]
 });
+
+function initUnits() {
+    if(svgImportUnitsSet) return;
+    svgImportUnitsSet = true;
+    var config = api('editorCall', 'getConfig');
+    if(svgImportScale==1 && config.canvas.unit == 'mm') api('doCommand','extension-svgimport-set_mm');
+    if(svgImportScale==1 && config.canvas.unit == 'inch') api('doCommand','extension-svgimport-set_inch');
+    if(svgImportScale==1 && config.canvas.unit == 'mil') api('doCommand','extension-svgimport-set_mil');
+}
 
 function uiDisplayImportFlattenAccuracy() {
     $('#extension-svgimport-flatten-accuracy').val(svgImportScale);
