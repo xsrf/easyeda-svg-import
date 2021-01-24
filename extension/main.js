@@ -59,14 +59,6 @@ var dlg = api('createDialog', {
             <a class="l-btn" cmd="extension-svgimport-set_mm"><span class="l-btn-left"><span class="l-btn-text">mm</span></span></a>
         </div>
     </fieldset>
-    <fieldset>
-        <legend class="i18n">Import origin (svg origin will be placed here)</legend>
-        <div>
-            <input type="number" step="any" name="import-origin-x" id="import-origin-x" value="0" size="5" style="width:6em">
-            <input type="number" step="any" name="import-origin-y" id="import-origin-y" value="0" size="5" style="width:6em">
-            <a class="l-btn" id="btn-get-offsets" cmd="extension-svgimport-origin"><span class="l-btn-left"><span class="l-btn-text i18n">Editor Origin</span></span></a>
-        </div>
-    </fieldset>
     <!--
     <fieldset>
         <legend class="i18n">Options</legend>
@@ -86,6 +78,7 @@ var dlg = api('createDialog', {
             </select>
         </div>
     </fieldset>
+    <fieldset><div class="i18n">SVG origin will be placed at canvas origin</div></fieldset>
 </div>`,
 	width : 410,
 	modal : false,
@@ -148,9 +141,6 @@ api('createCommand', {
         dlg.dialog('open');
         dlg.dialog('expand');
         $('#extension-svgimport-fileinput').click();
-    },
-    'extension-svgimport-origin' : () => {
-        getOffsets();
     },
     'extension-svgimport-set_mm' : () => {
         setSvgImportScale(10/2.54);
@@ -234,17 +224,6 @@ $('#import-scale').on('change',(e)=>{
     }
 });
 
-$('#import-origin-x').on('change',(e)=>{
-    if(e.target.value) {
-        setSvgImportOrigin(e.target.value, NaN);
-    }
-});
-
-$('#import-origin-y').on('change',(e)=>{
-    if(e.target.value) {
-        setSvgImportOrigin(NaN, e.target.value);
-    }
-});
 
 $('#import-as-svg').on('change',(e)=>{
     if(e.target.value) {
@@ -311,13 +290,7 @@ function uiDisplayImportAs() {
 function setSvgImportOrigin(x,y) {
     if(!isNaN(x)) svgImportOffsetX = x;
     if(!isNaN(y)) svgImportOffsetY = y;
-    uiDisplayImportOrigin();
     debugLog(`svgImportOffset : ( ${svgImportOffsetX} , ${svgImportOffsetY} )`);
-}
-
-function uiDisplayImportOrigin() {
-    $('#import-origin-x').val(svgImportOffsetX);
-    $('#import-origin-y').val(svgImportOffsetY);
 }
 
 function getOffsets() {
@@ -346,6 +319,7 @@ function debugLog(msg) {
 
 
 function doImport() {
+    getOffsets();
     unknownCommandFlag = false;
     const regexp = /<path[^>]*[^a-z]d="([^"]+)"/g;
     var paths = [...svgDocument.matchAll(regexp)].map(e => e[1]);
