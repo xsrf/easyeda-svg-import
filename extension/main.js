@@ -390,8 +390,6 @@ function doImport() {
         }
         addTrack(svgPaths);
     }
-    
-    api('editorCall','fitview'); // center view, because import messes up view anyways
 }
 
 function splitPaths(paths) {
@@ -420,52 +418,41 @@ function newId() {
 
 function addSolidRegion(code) {
     if(typeof(code) == 'string') code = [code];
-    let s = api('getSource', {type: "json"});
-    if(s.SOLIDREGION === undefined) s.SOLIDREGION = {};
     code.forEach(e => {
-        let iid = newId();   
-        s.SOLIDREGION[iid] = { gId: iid, layerid: `${svgImportLayer}`, pathStr: e, type: "solid"};
+        api('createShape',[{
+            shapeType: 'SOLIDREGION',
+            jsonCache: {
+                layerid: `${svgImportLayer}`, 
+                pathStr: e, 
+                type: "solid"
+            }
+        }]);
     });
-    api('applySource', {source: s, createNew: false});
 }
    
 
 function addSVGNode(code) {
     if(typeof(code) == 'string') code = [code];
-    let s = api('getSource', {type: "json"});
-    if(s.SVGNODE === undefined) s.SVGNODE = {};
     code.forEach(e => {
-        let iid = newId();
-        s.SVGNODE[iid] = { 
-            gId: iid, 
-            layerid: `${svgImportLayer}`, 
-            nodeName: "path",
-            nodeType: 1,
-            attrs: {
-                d: e,
-                id: iid, 
-                layerid: `${svgImportLayer}`,
-                stroke: "none"
-            }
-        };
+        api('editorCall',{
+            cmd: 'importShape', 
+            args: [`<path d="${e}" layerid="${svgImportLayer}" stroke="none"></path>`]
+        });
     });
-    api('applySource', {source: s, createNew: false});
 }
 
 function addTrack(points) {
     if(typeof(points) == 'string') points = [points];
-    let s = api('getSource', {type: "json"});
-    if(s.TRACK === undefined) s.TRACK = {};
     points.forEach(e => {
-        let iid = newId();
-        s.TRACK[iid] = { 
-            gId: iid, 
-            layerid: `${svgImportLayer}`, 
-            strokeWidth: 1,
-            pointArr: e
-        };
+        api('createShape',[{
+            shapeType: 'TRACK',
+            jsonCache: {
+                layerid: `${svgImportLayer}`, 
+                strokeWidth: 1,
+                pointArr: e
+            }
+        }]);
     });
-    api('applySource', {source: s, createNew: false});
 }
 
 
