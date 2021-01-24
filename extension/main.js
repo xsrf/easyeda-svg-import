@@ -183,7 +183,8 @@ api('createToolbarButton', {
 			text:"Import file ...", 
 			cmd:"extension-svgimport-openfile", 
 			title:'Import file ...'
-		},
+        },
+        {},
         {
 			text:"Visit GitHub page", 
 			cmd:"extension-svgimport-github", 
