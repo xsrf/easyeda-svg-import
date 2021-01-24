@@ -7,11 +7,13 @@ err_no_track_points = No valid paths found that only consist of line segments
 warn_some_track_points = Some paths were not imported as tracks, because they contained not only line segments
 
 [de]
-SVG Import = SVG Importer
+SVG Import = SVG Import
 Import SVG ... = Importiere SVG ...
 Import SVG paths into PCB = SVG Pfade auf PCB importieren
 Load file... = Datei laden...
 Load file = Datei laden
+Import file ... = Datei importieren ...
+Visit GitHub page = GitHub Seite öffnen
 Open Import Dialog = Import-Fenster anzeigen
 Editor Origin = Editor Ursprung
 Import as = Importieren als
@@ -28,6 +30,7 @@ err_parsing_all_paths = Fehler beim parsen der path-Tags, siehe Konsole für Det
 warn_parsing_some_paths = Nicht alle path-Tags wurden korrekt gelesen, siehe Konsole für Details
 err_no_track_points = Keine reinen Linien-Pfade vorhanden
 warn_some_track_points = Einige Pfade wurde nicht importiert, weil sie nicht nur aus Linien-Segmenten bestehen
+SVG origin will be placed at canvas origin = SVG Ursprung wird am Ursprung des Editors plaziert
 
 [es]
 SVG Import = SVG Importar
