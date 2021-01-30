@@ -26,8 +26,9 @@ OpenSCAD creates very simple SVGs just using `path` elements.
 
 SVG however supports [more primitives](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes) than just `path`. Other primitives, like `line`, `circle`, `polyline`, `rect` etc. are not supported. The main reason for this is that all of these primitives can also be expressed as `path` - which is the most powerful primitive in SVG.
 
-Converting SVGs using Inkscape
-------------------------------
+Preparing SVGs using Inkscape
+-----------------------------
+### Convert objects to paths
 As mentioned, the SVGs are required to use `path` elements to be properly imported. If your imported SVG is missing some parts or you get the message "No path-Tags found 😕" you may need to convert it.
 
 An easy way is by using the free software [Inkscape](https://inkscape.org/) and opening your SVG with it. After that, select all elements of your Drawing (`CTRL`+`A`) - or just those missing after import - and convert them to paths using **Path** -> **Object to Path** or **Stroke to Path** (depends on your drawing, try it). Then just save it as a new file.
@@ -36,4 +37,12 @@ An easy way is by using the free software [Inkscape](https://inkscape.org/) and 
 
 **Path** -> **Union** or **Simplify** may also help reducing complexity if you have an SVG with lots of overlapping shapes.
 
+### Translating objects/groups
+When you translate/move objects or a group of objects, the translation may actually not show up in the imported SVG. To fix this, just select the group of objects and hit **Object** -> **Ungroup** and (if you want) **Object** -> **Group** again.
+
+### Working with text
+To import Text, it has to be converted with **Object to Path**. This will generate one object for each letter of the text which will get hard to work with in EasyEDA. Use **Path** -> **Combine** to combine all letters to a single path.
+
+Still issues?
+-------------
 If you still have issues importing an SVG, feel free to open an issue.
