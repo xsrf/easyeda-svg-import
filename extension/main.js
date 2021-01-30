@@ -354,6 +354,8 @@ function doImport() {
     }
     svgPaths = paths;
 
+    svgPaths = svgPaths.map(p => replaceArcsWithSegmets(p));
+
     if(svgImportAs == 'solid') {
         // solid regions only support split paths
         svgPaths = splitPaths(svgPaths);        
@@ -397,6 +399,29 @@ function pathsToPoints(paths) {
         return pts;
     })
     return paths;
+}
+
+function replaceArcsWithSegmets(path) {
+    // the path is already reparsed and thus normalized,
+    // so we e.g. know for sure that there must be coordinates
+    // before A and only MLQCA after A.
+    while(arcMatch = path.match(/[^ ]+ [^ ]+ A ([^ ]+) ([^ ]+) [^MLQCAX]+/i)) {
+        arcString = arcMatch[0];
+        if(arcMatch[1] == arcMatch[2]) {
+            // this is a circle, which is supported by EasyEDA, flag it as done and skip
+            path = path.replace(arcString, arcString.replace('A','X') );
+            debugLog(`Skipped Arc "... ${arcString} ...", it's a circle`);
+            continue;
+        }
+        project = new paper.Project();
+        p = project.importSVG(`<path d="M ${arcString}"/>`);
+        p.flatten(svgImportFlattenAccuracy);
+        segString = p.segments.map(s => `${s.point.x} ${s.point.y} `).join('L ');
+        path = path.replace(arcString, segString);
+        debugLog(`Replaced Arc "... ${arcString} ..." with linear segments`);
+    }
+    path = path.replaceAll('X','A'); // restore skipped arcs
+    return path;
 }
 
 function newId() {
