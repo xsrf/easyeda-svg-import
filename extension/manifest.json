@@ -3,10 +3,11 @@
 	"description": "Import SVG paths into PCB",
 	"version": "1.5",
 	"homepage": "https://github.com/xsrf/easyeda-svg-import",
+	"updatebaseurl" : "https://raw.githubusercontent.com/xsrf/easyeda-svg-import/autoupdate/extension/",
 	"author": "Andreas Bernhofer",
 	"icons": {
 		"default": "ext-icon.svg"
 	},
 	"locale": "locale.txt",
-	"scripts": [ "paper-full.min.js","main.js" ]
+	"scripts": [ "easyeda-helper.js","paper-full.min.js","main.js" ]
 }

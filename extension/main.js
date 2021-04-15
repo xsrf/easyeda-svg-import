@@ -1,10 +1,7 @@
-/*
-    EasyEDA Extension!
-    
-	extension-svgimport-test
-	extension-svgimport-test
-
-*/
+const extensionId = 'extension-svgimport-test'.split('-')[1]; // this format is needed to set the Extension ID during install
+const instance = easyeda.extension.instances[extensionId];
+const manifest = instance.manifest;
+const Helper = instance.Helper;
 var paper = easyeda.extension.instances.svgimport.paper;  // reference to "paper" from paper.js
 var svgImportScale = 1;
 var svgImportAs = 'svg';
@@ -16,6 +13,8 @@ var svgPaths = [];
 var svgImportLayer = 1;
 var unknownCommandFlag = false;
 var svgImportUnitsSet = false;
+
+Helper.checkUpdate();
 
 var dlg = api('createDialog', {
 	title: "SVG Import",
