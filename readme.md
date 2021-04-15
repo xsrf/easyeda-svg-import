@@ -1,12 +1,13 @@
 SVG Import Script for EasyEDA (WIP)
 ===================================
-This is me trying to write a script / extension for [EasyEDA](https://easyeda.com/editor) that can import SVG files / paths into EasyEDA without any distorions or restrictions that the original SVG/Image import has.
+This is an extension for [EasyEDA](https://easyeda.com/editor) that can import SVG files / paths into EasyEDA without any distorions that the internal Image import produces.
+It also allows to import SVGs as solid regions or tracks/outline.
 
 *This is work in progress and not at all finished or polished!*
 
 Installation
 ------------
-Clone this repository or just download the latest `extension.zip` from [Releases](https://github.com/xsrf/easyeda-svg-import/releases). Then in [EasyEDA](https://easyeda.com/editor) go to "Advanced" -> "Extensions" -> "Extensions Setting" -> "Load Extension..." -> "Select Files..." and select all files from the `extension` directory of this repository.
+Download the latest `extension.zip` from [Releases](https://github.com/xsrf/easyeda-svg-import/releases) and extract the files. Then in [EasyEDA](https://easyeda.com/editor) go to "Advanced" -> "Extensions" -> "Extensions Setting" -> "Load Extension..." -> "Select Files..." and select all extracted files from the `extension` directory.
 
 <img src="images/EasyEDA-SVG-Install.gif" alt="Extension Installation" />
 
@@ -37,11 +38,14 @@ An easy way is by using the free software [Inkscape](https://inkscape.org/) and 
 
 **Path** -> **Union** or **Simplify** may also help reducing complexity if you have an SVG with lots of overlapping shapes.
 
-### Translating objects/groups
+### Translating/Moving objects/groups
 When you translate/move objects or a group of objects, the translation may actually not show up in the imported SVG. To fix this, just select the group of objects and hit **Object** -> **Ungroup** and (if you want) **Object** -> **Group** again.
 
 ### Working with text
 To import Text, it has to be converted with **Object to Path**. This will generate one object for each letter of the text which will get hard to work with in EasyEDA. Use **Path** -> **Combine** to combine all letters to a single path.
+
+### What the import will look like
+<img src="images/import_example.png" alt="Example screenshot of Shapes in Inkscape and EasyEDA"/>
 
 Still issues?
 -------------
