@@ -391,6 +391,7 @@ function joinPaths(paths) {
 function pathsToPoints(paths) {
     paths = splitPaths(paths);
     paths = paths.map(p => {
+        checkPathErrors(p);
         project = new paper.Project();
         path = project.importSVG(`<path d="${p}"/>`);
         path.flatten(svgImportFlattenAccuracy);
@@ -427,9 +428,19 @@ function newId() {
     return "cgge"+Math.floor(Math.random() * 9e6);
 }
 
+function checkPathErrors(path) {
+    if(path.includes('NaN')) {
+        debugLog(`Path contains NaN: ${path}`);
+        let msg = `Path contains NaN and cannot be imported, please open an issue on ${manifest.homepage} and provide your SVG if possible`;
+        $.messager.error(msg);
+        throw msg;
+    }
+}
+
 function addSolidRegion(code) {
     if(typeof(code) == 'string') code = [code];
     code.forEach(e => {
+        checkPathErrors(e);
         api('createShape',[{
             shapeType: 'SOLIDREGION',
             jsonCache: {
@@ -445,6 +456,7 @@ function addSolidRegion(code) {
 function addSVGNode(code) {
     if(typeof(code) == 'string') code = [code];
     code.forEach(e => {
+        checkPathErrors(e);
         api('editorCall',{
             cmd: 'importShape', 
             args: [`<path d="${e}" layerid="${svgImportLayer}" stroke="none"></path>`]
@@ -453,7 +465,6 @@ function addSVGNode(code) {
 }
 
 function addTrack(points) {
-    if(typeof(points) == 'string') points = [points];
     points.forEach(e => {
         api('createShape',[{
             shapeType: 'TRACK',
@@ -465,7 +476,6 @@ function addTrack(points) {
         }]);
     });
 }
-
 
 function reparseSVGPath(pathData) {
     // Add spaces around chars ( M5,5L8,8 -> M 5,5 L 8,8 ) except e which is used as 42e-3
