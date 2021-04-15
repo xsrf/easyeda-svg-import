@@ -1,5 +1,5 @@
-SVG Import Script for EasyEDA (WIP)
-===================================
+SVG Import Extension for EasyEDA
+================================
 This is an extension for [EasyEDA](https://easyeda.com/editor) that can import SVG files / paths into EasyEDA without any distorions that the internal Image import produces.
 It also allows to import SVGs as solid regions or tracks/outline.
 
