@@ -47,7 +47,7 @@ var dlg = api('createDialog', {
     <fieldset id="extension-svgimport-track-options" style="display:none">
         <legend class="i18n">Curve segmentation accuracy (Track import only)</legend>
         <div>
-            <input type="number" step="any" name="extension-svgimport-flatten-accuracy" id="extension-svgimport-flatten-accuracy" value="0.05" size="4" style="width:8em"> (in 0.1 inch / 0.25mm)
+            <input type="number" step="any" name="extension-svgimport-flatten-accuracy" id="extension-svgimport-flatten-accuracy" value="0.05" size="4" style="width:8em"> (in 0.01 inch / 0.254mm)
         </div>
     </fieldset>    
     <fieldset>
