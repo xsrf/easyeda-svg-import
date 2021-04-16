@@ -170,7 +170,7 @@ api('createCommand', {
 api('createToolbarButton', {
 	icon: api('getRes', {file:'icon.svg'}),
 	title:'SVG Import',
-	fordoctype:'pcb',
+	fordoctype:'pcb,pcblib',
 	menu:[
 		{
 			text:"Open Import Dialog", 
