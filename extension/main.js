@@ -436,7 +436,7 @@ function checkPathErrors(path) {
     path.forEach(p=>{
         if(p.includes('NaN')) {
             debugLog(`Path contains NaN: ${p}`);
-            let msg = `Path contains NaN and cannot be imported, please open an issue on ${manifest.homepage} and provide your SVG if possible`;
+            let msg = Locale.i18n('err_path_contains_nan',{homepage: manifest.homepage});
             $.messager.error(msg);
             throw msg;
         }    
