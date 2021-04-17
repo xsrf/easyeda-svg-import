@@ -50,3 +50,30 @@ err_parsing_all_paths = Falló el procesado de trayectorias, mire la consola par
 warn_parsing_some_paths = No todas las trayectorias se procesaron, mire la consola para más detalles
 err_no_track_points = No se han encontrado trayectorias válidas que sólo consistan en segmentos de línea
 warn_some_track_points = Algunas trayectorias no se importaron como pistas, porque contenían no sólo segmentos de línea
+
+
+[zh-hans]
+SVG Import = SVG 导入
+Import SVG ... = 导入 SVG ...
+Import SVG paths into PCB = 导入 SVG 路径到 PCB
+Load file... = 加载文件...
+Load file = 加载文件
+Import file ... = 导入文件 ...
+Visit GitHub page = 访问 Github 主页
+Open Import Dialog = 打开导入对话框
+Editor Origin = 编辑器原点
+Import as = 导入为
+Import file = 导入文件
+SVG Node (copper, soldermask, silk, document) = 图片(铜层, 阻焊层, 丝印层, 文档层)
+Solid region (copper fill / keepout, board cutout) = 实心填充(填充 / 无填充, 挖槽)
+Track (board outline, silk) = 导线 (板框, 丝印层)
+(curves will be broken up into segments) = (弧线会被打断为线段)
+Curve segmentation accuracy (Track import only) = 弧线线段精度 (仅导入为导线)
+Import scale (EasyEDA base unit is 0.01 inch) = 导入缩放 (EasyEDA 的基础单位是 0.01inch)
+err_file_not_supported = 文件不支持，仅支持 .svg 文件
+err_no_paths_found = 未发现 path-Tags 😕
+err_parsing_all_paths = 解析路径失败，打开 console log 查看更多信息 😕
+warn_parsing_some_paths = 并非全部路径解析成功, s打开 console log 查看更多信息
+err_no_track_points = 没有找到仅由线段组成的有效路径
+warn_some_track_points = 有些路径没有作为导线导入，因为它们不仅包含线段
+SVG origin will be placed at canvas origin = SVG 原点会被放置在画布原点
