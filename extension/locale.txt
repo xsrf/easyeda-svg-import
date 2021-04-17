@@ -6,6 +6,7 @@ warn_parsing_some_paths = Not all paths were parsed correctly, see console log f
 err_no_track_points = No valid paths found that only consist of line segments
 warn_some_track_points = Some paths were not imported as tracks, because they contained not only line segments
 err_path_contains_nan = Path contains NaN values and cannot be imported. Please open an issue on GitHub and provide your SVG if possible
+info_items_imported = Successfully imported {items} item(s)
 
 [de]
 SVG Import = SVG Import
@@ -36,6 +37,7 @@ warn_parsing_some_paths = Nicht alle path-Tags wurden korrekt gelesen, siehe Kon
 err_no_track_points = Keine reinen Linien-Pfade vorhanden
 warn_some_track_points = Einige Pfade wurde nicht importiert, weil sie nicht nur aus Linien-Segmenten bestehen
 err_path_contains_nan = Pfad enthält NaN Werte. Bitte öffne ein Issue auf GitHub und hänge, wenn möglich, das SVG an
+info_items_imported = {items} Pfad(e) erfolgreich importiert
 
 [es]
 SVG Import = SVG Importar
@@ -66,7 +68,7 @@ warn_parsing_some_paths = No todas las trayectorias se procesaron, mire la conso
 err_no_track_points = No se han encontrado trayectorias válidas que sólo consistan en segmentos de línea
 warn_some_track_points = Algunas trayectorias no se importaron como pistas, porque contenían no sólo segmentos de línea
 err_path_contains_nan = Path contains NaN values and cannot be imported. Please open an issue on GitHub and provide your SVG if possible
-
+info_items_imported = Successfully imported {items} item(s)
 
 [zh-hans]
 SVG Import = SVG 导入
@@ -97,3 +99,4 @@ warn_parsing_some_paths = 并非全部路径解析成功, s打开 console log �
 err_no_track_points = 没有找到仅由线段组成的有效路径
 warn_some_track_points = 有些路径没有作为导线导入，因为它们不仅包含线段
 err_path_contains_nan = Path contains NaN values and cannot be imported. Please open an issue on GitHub and provide your SVG if possible
+info_items_imported = Successfully imported {items} item(s)

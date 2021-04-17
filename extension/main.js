@@ -330,6 +330,15 @@ function debugLog(msg) {
     console.log(`%c[svgimport] %c${msg}`,'font-weight: bold; color: #00D;','');
 }
 
+function showItemsImported(count) {
+    $.messager.show({
+        title: instance.manifest.name,
+        msg: Locale.i18n('info_items_imported',{items: count}),
+        height: 'auto',
+        timeout: 3e3,
+        showType: "fade"
+    });
+}
 
 function doImport() {
     getOffsets();
@@ -455,6 +464,7 @@ function addSolidRegion(code) {
             }
         }]);
     });
+    showItemsImported(code.length);
 }
    
 
@@ -466,6 +476,7 @@ function addSVGNode(code) {
             args: [`<path d="${e}" layerid="${svgImportLayer}" stroke="none"></path>`]
         });
     });
+    showItemsImported(code.length);
 }
 
 function addTrack(points) {
@@ -479,6 +490,7 @@ function addTrack(points) {
             }
         }]);
     });
+    showItemsImported(points.length);
 }
 
 function reparseSVGPath(pathData) {
