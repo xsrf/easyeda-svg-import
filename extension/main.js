@@ -317,7 +317,7 @@ function uiUpdateLayerOptions() {
     while(e=el.firstChild) el.removeChild(e); // remove all options
     let layers = Object.keys(s.layers).map( k => { let l = s.layers[k]; l.key=k; return l; } ).filter( l => l.visible);
     layers.forEach( layer => {
-        el.insertAdjacentHTML("beforeend",`<option value="${layer.key}">${layer.key} - ${layer.name}</option>`);
+        el.insertAdjacentHTML("beforeend",`<option value="${layer.key}" class="i18n">${layer.name}</option>`);
     });
     uiDisplayImportLayer();
 }
