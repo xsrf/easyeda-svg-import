@@ -102,14 +102,14 @@ instance.Helper = class Helper {
                 console.log(`Update check ok, "${extensionId}" is not up to date`);
                 skipVersion = onlineManifest.version;
                 $.messager.show({
-                    title: `Update Available for <b>${instance.manifest.name}</b>`,
+                    title: 'Update available',
                     msg: `<table>
-                            <tr><td>Installed:</td><td>${instance.manifest.name} ${instance.manifest.version}</td></tr>
-                            <tr><td>Available:</td><td>${onlineManifest.name} ${onlineManifest.version}</td></tr>
+                            <tr><td class="i18n">Installed:</td><td><span class="i18n">${instance.manifest.name}</span> ${instance.manifest.version}</td></tr>
+                            <tr><td class="i18n">Available:</td><td><span class="i18n">${onlineManifest.name}</span> ${onlineManifest.version}</td></tr>
                         </table>
                         <div class="dialog-button">
-                            <a tabindex="0" cmd="${cmdUpdatePage};dialog-close" class="l-btn"><span class="l-btn-left"><span class="l-btn-text i18n">Download</span></span></a>
-                            <a tabindex="0" cmd="${cmdUpdateSkip};dialog-close" class="l-btn"><span class="l-btn-left"><span class="l-btn-text i18n">Skip Version</span></span></a>
+                            <a cmd="${cmdUpdatePage};dialog-close" class="l-btn"><span class="l-btn-left"><span class="l-btn-text i18n">Download</span></span></a>
+                            <a cmd="${cmdUpdateSkip};dialog-close" class="l-btn"><span class="l-btn-left"><span class="l-btn-text i18n">Skip</span></span></a>
                         </div>
                         `,
                     height: 'auto',
@@ -123,5 +123,3 @@ instance.Helper = class Helper {
     }
 
 }
-
-console.log(`EasyEDA Helper loaded for extension "${extensionId}"`);
