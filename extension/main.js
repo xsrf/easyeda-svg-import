@@ -495,14 +495,13 @@ function addTrack(points) {
 
 function reparseSVGPath(pathData) {
     // Add spaces around chars ( M5,5L8,8 -> M 5,5 L 8,8 ) except e which is used as 42e-3
-    const regex_chars = /([a-df-zA-DF-Z])/g;
-    pathData = pathData.replaceAll(regex_chars,' $1 ');
-    // Add spaces before minus ( M5-5 -> M5 -5 )
-    const regex_minus = /([^eE])(-)/g;
-    pathData = pathData.replaceAll(regex_minus,'$1 $2');
+    pathData = pathData.replaceAll(/([a-df-zA-DF-Z])/g,' $1 ');
+    // Replace E with e
+    pathData = pathData.replaceAll('E','e');
+    // Add spaces around valid numbers ( 5.2.5e6.7-.9 -> 5.2 .5e6 .7 -.9 )
+    pathData = pathData.replaceAll(/(-?[0-9]*(\.[0-9]*)?(e-?[0-9]+)?)/g,' $1 ');
     // Normalize spaces / remove comma ( M5-5L8,8 -> M 5 -5 L 8 8 )
-    const regex_svg = /[^0-9a-zA-Z-\.]+/g;
-    pathData = pathData.replaceAll(regex_svg,' ').trim();
+    pathData = pathData.replaceAll(/[^0-9a-zA-Z-\.]+/g,' ').trim();
 
     var c = pathData.split(' ');
     var idx = 0;
