@@ -369,8 +369,9 @@ function doImport() {
     checkPathErrors(paths);
 
     if(svgImportAs == 'solid') {
-        // solid regions only support split paths
-        svgPaths = splitPaths(svgPaths);        
+        // solid regions only support split paths and must be closed (Z)
+        svgPaths = splitPaths(svgPaths);
+        svgPaths = closePaths(svgPaths);            
         addSolidRegion(svgPaths);
     }
 
@@ -399,6 +400,10 @@ function splitPaths(paths) {
 
 function joinPaths(paths) {
     return paths.join(' ');
+}
+
+function closePaths(paths) {
+    return paths.map(e => e + ' Z');
 }
 
 function pathsToPoints(paths) {
