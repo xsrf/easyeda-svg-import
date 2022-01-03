@@ -1,7 +1,7 @@
 {
 	"name": "SVG Import",
 	"description": "Import SVG paths into PCB",
-	"version": "1.8",
+	"version": "1.9",
 	"homepage": "https://github.com/xsrf/easyeda-svg-import",
 	"updatebaseurl" : "https://raw.githubusercontent.com/xsrf/easyeda-svg-import/autoupdate/extension/",
 	"author": "Andreas Bernhofer",
