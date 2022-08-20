@@ -509,18 +509,15 @@ function reparseSVGPath(pathData) {
     pathData = pathData.replaceAll(/[^0-9a-zA-Z-\.]+/g,' ').trim();
 
     var c = pathData.split(' ');
-    var idx = 0;
-    var cx = 0;
-    var cx = 0;
-    var zx = 0;
-    var zy = 0;
+    var idx = 0; // Index for parsing path
+    var cx = cy = 0; // Current absoulute coordinate during parsing
+    var zx = zy = 0; // Coordinate of the last move cmd, Z will draw a line to this point
     var k1x = k1y = k2x = k2y = rx = ry = rt = f1 = f2 = 0;
-    var sx = svgImportScale;
-    var sy = svgImportScale;
+    var sx = sy = svgImportScale; // Scaling of coordinates
     var ox = svgImportOffsetX;
     var oy = svgImportOffsetY;
-    var o = Array();
-    var lastCmd = 'M';
+    var o = Array(); // will be filled with the parsed output
+    var currentCmd = previousCmd = 'M';
 
     debugLog(`Importing scale ${svgImportScale}, Offset (${svgImportOffsetX},${svgImportOffsetY})`);
 
@@ -528,16 +525,18 @@ function reparseSVGPath(pathData) {
     while(idx < c.length) {
         // Parse the current command
         if(isNaN(Number(c[idx]))) {
+            // Since this element of the path string is not a number, it must be a command
             // save the current/last command for repetitions
-            lastCmd = c[idx];
+            previousCmd = currentCmd; // S command needs to know what the previous command was
+            currentCmd = c[idx];
         } else {
             // additional coordinates are parsed using the last known command
             idx--;
-            // If the last used command was M/m this one will be L/l
-            if(lastCmd == 'M') lastCmd = 'L';
-            if(lastCmd == 'm') lastCmd = 'l';
+            // If the last used command was M/m and is followed by coordinates, it is interpreted as L/l from now on
+            if(currentCmd == 'M') currentCmd = 'L';
+            if(currentCmd == 'm') currentCmd = 'l';
         }
-        switch(lastCmd) {
+        switch(currentCmd) {
             case 'M':
                 cx = zx = Number(c[++idx]);
                 cy = zy = Number(c[++idx]);
@@ -627,8 +626,15 @@ function reparseSVGPath(pathData) {
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
                 break;
             case 'S':
-                k1x = cx + (cx-k2x);
-                k1y = cy + (cy-k2y);  
+                if(['s','S','c','C'].includes(previousCmd)) {
+                    // First control point is a reflection of the previous k2, when S/s follows S/s or C/c
+                    k1x = cx + (cx-k2x);
+                    k1y = cy + (cy-k2y);
+                } else {
+                    // Otherwise the first control point is the current position
+                    k1x = cx;
+                    k1y = cy;
+                }
                 k2x = Number(c[++idx]);
                 k2y = Number(c[++idx]);
                 cx = Number(c[++idx]);
@@ -636,8 +642,15 @@ function reparseSVGPath(pathData) {
                 o = [...o, 'C', k1x*sx+ox, k1y*sy+oy, k2x*sx+ox, k2y*sy+oy, cx*sx+ox, cy*sy+oy];
                 break;
             case 's':
-                k1x = cx + (cx-k2x);
-                k1y = cy + (cy-k2y);
+                if(['s','S','c','C'].includes(previousCmd)) {
+                    // First control point is a reflection of the previous k2, when S/s follows S/s or C/c
+                    k1x = cx + (cx-k2x);
+                    k1y = cy + (cy-k2y);
+                } else {
+                    // Otherwise the first control point is the current position
+                    k1x = cx;
+                    k1y = cy;
+                }
                 k2x = cx + Number(c[++idx]);
                 k2y = cy + Number(c[++idx]);
                 cx += Number(c[++idx]);
@@ -666,7 +679,7 @@ function reparseSVGPath(pathData) {
                 break;
             default:
                 // Flag unknown command
-                debugLog(`Unexpected SVG Command "${lastCmd}" at idx ${idx} sequence "... ${c[idx-1]} > ${c[idx]} < ${c[idx+1]} ..."`);
+                debugLog(`Unexpected SVG Command "${currentCmd}" at idx ${idx} sequence "... ${c[idx-1]} > ${c[idx]} < ${c[idx+1]} ..."`);
                 unknownCommandFlag = true;
                 return '';
         }
